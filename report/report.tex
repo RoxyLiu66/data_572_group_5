@@ -1,38 +1,47 @@
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
 
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{setspace}   % might need to run: "tlmgr install setspace" 
+                        % in the terminal to download this package if it doesn't work
+
 \title{Data 572: Project working title}
 
 \author{Avalvir Kaur Sekhon, Zihuan Liu \& Jordan Kaseram}
 
 \begin{document}
-
+\doublespacing
 
 
 
 \maketitle
 
 \begin{abstract}
-    
+    \singlespacing
+
+
 \end{abstract}
 
 \section*{Introduction}
-
-hello 
-
-
+hello
 
 
 \section*{Methodology}
 
+\subsection*{Data Preprocessing}
+The Titantic dataset was preprocessed to enhance its suitability for statistical modeling and to reduce noise and redundancy. Identifer features lacking predictive relevance, such as passenger identifers or ticket numbers, were removed prior to analysis. Missing values in numeric features were imputed using the median, whereas missing categorical variables were imputed using the mode. Categorical features were encoded as dummy variables to use in linear modeling frameworks. 
 
-
-
+\noindent To further reduce redundancy and limit multicollinearity, several features were evaluated and pruned. For example, family-related variables were replaced with a single family size variable. This step is necessary since there are many features that are highly correlated and limiting 
 
 \section*{Experiment}
 
+\subsection*{Expermential Design}
+
+\subsection*{Results and Analysis}
 
 
+\subsection*{Discussion}
 
 
 \section*{Conclusion}
