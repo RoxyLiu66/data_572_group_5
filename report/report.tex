@@ -30,9 +30,9 @@ hello
 \newpage
 \section*{Methodology}
 
-\subsection*{Titantic Data Set}
+\subsection*{Titanic Data Set}
 
-The Titanic dataset consists of passenger-level information from the sinking of the RMS \textit{Titantic}. Each observation corresponds to an individual passenger, with the response variable indicating survival status (1 = survived, 0 = did not survive). The dataset contains a mixture of demographic, socioeconomic, and voyage-related features, including age, sex, passenger class, fare paid, family composition, and cabin information.
+The Titanic dataset consists of passenger-level information from the sinking of the RMS \textit{Titanic}. Each observation corresponds to an individual passenger, with the response variable indicating survival status (1 = survived, 0 = did not survive). The dataset contains a mixture of demographic, socioeconomic, and voyage-related features, including age, sex, passenger class, fare paid, family composition, and cabin information.
 
 In total, the dataset contains 891 observations with a diverse set of categorical and numerical variables. As is typical of real-world data, the raw dataset presents several challenges, including missing values, highly sparse columns, and correlated features derived from similar underlying information.
 
@@ -48,20 +48,34 @@ Categorical predictors were converted into numerical form using one-hot encoding
 
 The resulting feature set provides a stable and interpretable foundation for training supervised machine learning models for binary classification.
 
-\subsection*{Train-Test Splitting Strategy}
+\subsection*{Resampling and Validation Strategy}
 
-The dataset was partitioned into training and test sets using a stratified split, with 75\% of the data allocated to training and 25\% reserved for testing. Stratification ensured that the class distribution of survivors and non-survivors was preserved across both sets. All preprocessing steps involving data-driven quantities, such as imputation values, were computed using the training set only to avoid data leakage.
+To ensure reliable model evaluation and reduce overfitting, the dataset was partitioned into training (75\%) and testing (25\%) sets using a stratified split to preserve the original survival class proportions. Stratification is particularly important for the Titanic dataset due to its class imbalance between survivors and non-survivors.
+
+All model training, hyperparameter tuning, and feature selection were performed exclusively on the training set using stratified $k$-fold cross-validation with $k=5$. This resampling strategy maintains class balance within each fold and provides stable performance estimates while preventing information leakage.
+
+Final model performance was evaluated on the held-out test set, which remained untouched during model selection. This approach yields an unbiased estimate of generalization performance and ensures fair comparison across all classification methods.
+
 
 \subsection*{Model Selection}
 
+Classifications were selected to evaluate the predictive performance of the features present in the Titanic data set. These methods include: Logistic Regression, Linear Discriminant Analysis (LDA) and K-Nearest Neighbours (KNN). Logistic Regression and LDA were considered for their interpretability due to linearity \cite{Hastie}. Moreover, the Titanic prediction task is a binary response with a mix of numeric and categorical variables which these models perform well on \cite{islp}.
 
+These parametric tests assume a structured relationship between the predictors and the response, enabling stable parameter estimation and favourable bias-variance trade-offs. In contrast, KNN was included as a non-parametric test to capture potential non-linear patterns without assuming strong distribution assumptions. KNN provides a useful comparison model by classifying passengers based on identifying the observations that are nearest it rather than a global decision boundary \cite{islp}. 
 
+\subsection*{Hyperparameter Tuning Strategy}
 
+Hyperparmeter tuning was conducted using grid search, which is a simple memoryless method that can be used to explore predefined hyperparamer values \cite{Franceschi}. This was combined with stratified cross-validation to identify the optimal model configuration.
+
+For Linear Discriminant Analysis, hyperparameter tuning focused on the choice of solver (\texttt{svd} versus \texttt{lsqr}) and the use of covariance shrinkage, as shrinkage regularization is known to stabilize covariance estimation in the presence of correlated predictors and limited sample sizes \cite{Hastie, Friedman, Franceschi}.  
+
+For Logistic Regression, tuning was performed over the regularization strength parameter $C$ and the choice of $\ell_1$ and $\ell_2$ penalties, allowing control over model complexity and coefficient sparsity, which directly affects bias–variance trade-offs and interpretability in high-dimensional settings \cite{islp, KuhnJohnson}.  
+For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behavior and to regulate model sensitivity to noise and class overlap \cite{islp, KuhnJohnson}.  
 
 \newpage
 \section*{Experiment}
 
-\subsection*{Expermential Design}
+\subsection*{Experimental Design}
 
 \subsection*{Results and Analysis}
 
@@ -78,8 +92,11 @@ The dataset was partitioned into training and test sets using a stratified split
 
     \bibitem{islp} James, G., Witten, D., Hastie, T., Tibshirani, R., \& Taylor, J. (2023). An introduction to statistical learning: Python edition.
 
+    \bibitem{Hastie} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). The elements of statistical learning.
+
     \bibitem{Fisher} Fisher, R. A. (1936). The use of multiple measurements in taxonomic problems. Annals of Eugenics, 7(2), 179-188.
 
+    \bibitem{Franceschi} Franceschi, L., Donini, M., Perrone, V., Klein, A., Archambeau, C., Seeger, M., ... \& Frasconi, P. (2025). Hyperparameter optimization in machine learning. Foundations and Trends® in Machine Learning, 18(6), 975-1109.
 
 
 
