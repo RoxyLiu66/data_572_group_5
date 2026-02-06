@@ -11,7 +11,7 @@ This dataset is an *augmented version* of the well-known Titanic dataset origina
 **Columns:**
 
 | Column Name | Description |
-|----------------------------------------------|--------------------------|
+|---------------------------------------------|--------------------------|
 | PassengerId | Unique identifier for each passenger. |
 | Survived | Survival status (0 = No, 1 = Yes). This is the target variable. |
 | Pclass | Passenger class (1 = 1st, 2 = 2nd, 3 = 3rd). |
