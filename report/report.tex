@@ -7,6 +7,8 @@
 \usepackage{setspace}   % might need to run: "tlmgr install setspace" 
                         % in the terminal to download this package if it doesn't work
 \usepackage{booktabs}
+\usepackage{float}      % Enables [H]
+
 \title{Data 572: Project working title}
 
 \author{Avalvir Kaur Sekhon, Zihuan Liu \& Jordan Kaseram}
@@ -20,7 +22,9 @@
 
 \begin{abstract}
     \singlespacing
+    single spaced abstract
 
+    cause it looks better
 
 \end{abstract}
 
@@ -28,7 +32,6 @@
 hello
 
 
-\newpage
 \section*{Methodology}
 
 \subsection*{Titanic Data Set}
@@ -45,7 +48,7 @@ Data preprocessing was performed using Python and the pandas library, which prov
 
 Missing data were handled using simple, distribution-preserving imputation techniques. Missing values in passenger age, a numerical variable, were imputed using the median age within each passenger class. This approach allows age estimates to reflect socioeconomic differences across classes while remaining robust to outliers. Missing values in the port of embarkation, a categorical variable, were imputed using the mode, preserving the empirical distribution of this feature.
 
-Categorical predictors were converted into numerical form using one-hot encoding creating dummy variables. To reduce redundancy and limit multicollinearity, several highly correlated or derived features were evaluated and pruned. For example, the variables \texttt{SibSp}, \texttt{Parch}, and \texttt{is\_alone} were replaced by a single variable \texttt{family\_size}. 
+Categorical predictors were converted into numerical form using one-hot encoding creating dummy variables. To reduce redundancy and limit multicollinearity, several highly correlated or derived features were evaluated and pruned. For example, the variables \texttt{SibSp}, \texttt{Parch}, and \texttt{is\_alone} were removed since \texttt{family\_size} contains this information. 
 
 The resulting feature set provides a stable and interpretable foundation for training supervised machine learning models for binary classification.
 
@@ -60,7 +63,7 @@ Final model performance was evaluated on the held-out test set, which remained u
 
 \subsection*{Model Selection}
 
-Three classification methods were selected to evaluate the predictive performance of the features present in the Titanic data set. These methods include: Logistic Regression, Linear Discriminant Analysis (LDA) and K-Nearest Neighbours (KNN). Logistic Regression and LDA were considered for their interpretability due to linearity \cite{Hastie}. Moreover, the Titanic prediction task is a binary response with a mix of numeric and categorical variables which these models perform well on \cite{islp}.
+Three classification methods were selected to evaluate the predictive performance of the features present in the Titanic data set. These methods include: Logistic Regression, Linear Discriminant Analysis (LDA) and K-Nearest Neighbours (KNN). Logistic Regression and LDA were considered for their interpretability due to linearity \cite{Hastie}, and the Titanic prediction task is a binary response with a mix of numeric and categorical variables which these models perform well on \cite{islp}.
 
 These parametric tests assume a structured relationship between the predictors and the response, enabling stable parameter estimation and favourable bias-variance trade-offs. In contrast, KNN was included as a non-parametric test to capture potential non-linear patterns without assuming strong distribution assumptions. KNN provides a useful comparison model by classifying passengers based on identifying the observations that are nearest it rather than a global decision boundary \cite{islp}. 
 
@@ -74,27 +77,23 @@ For Logistic Regression, tuning was performed over the regularization strength p
 
 For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behavior and to regulate model sensitivity to noise and class overlap \cite{islp, Kuhn}.  
 
-\newpage
 \section*{Experiment}
 
 \subsection*{Experimental Design}
 
-The experimental design focused on comparing the predictive performance and interpretability of multiple classification models under a controlled and consistent evaluation framework. All models were trained using the same feature set and evaluated using identical performance metrics to isolate the effect of model choice and tuning decisions.
+The experimental design aimed to compare the predictive performance and interpretability of multiple classification models under a consistent evaluation framework. All models were trained using the same preprocessed feature set and assessed with identical performance metrics to isolate the impact of model choice and tuning decisions.
 
-Each classification method was first evaluated in a baseline configuration to establish a reference point for performance. These baseline results were used to assess how well each model captured the underlying structure of the data without additional complexity. The next set of experiments introduced hyperparameter tuning and feature selection to evaluate whether these refinements led to meaningful improvements in generalization performance.
+Each method was first evaluated in a baseline configuration to establish a performance reference. Subsequent experiments introduced hyperparameter tuning and feature selection to examine whether these refinements led to improvements in generalization performance.
 
-Comparisons were conducted across models using cross-validated accuracy estimates on the training data, followed by final evaluation on a held-out test set. This design enabled direct comparison between linear and non-linear approaches, as well as between parametric and non-parametric models, while controlling for differences in data preprocessing and evaluation procedures.
-
-In addition to predictive performance, model interpretability was examined through feature importance analyses. This allowed assessment of whether performance gains were accompanied by stable and meaningful explanations of survival outcomes.
+Model comparisons were based on cross-validated accuracy estimates computed on the training data, followed by final evaluation on a held-out test set. This design enabled fair comparison between linear and non-linear models, as well as between parametric and non-parametric approaches, while controlling for differences in preprocessing and evaluation procedures.
 
 \subsection*{Results and Analysis}
 
-The performance of the three classification models was first evaluated using baseline configurations and subsequently compared against tuned versions obtained through cross-validated grid search. Model performance was assessed using cross-validation accuracy, test-set accuracy, mean squared error, and class-specific precision.
-
 \paragraph{Baseline Model Performance}
-Among the baseline models, Linear Discriminant Analysis (LDA) achieved the strongest overall performance, with a mean cross-validation accuracy of 0.8249 and a test accuracy of 0.8386. Logistic Regression followed closely with a test accuracy of 0.8251, while K-Nearest Neighbours (KNN) exhibited lower predictive performance, achieving a test accuracy of 0.8027. Confusion matrices reveal that both LDA and Logistic Regression maintained a balanced trade-off between precision and recall across survival classes, whereas KNN showed reduced recall for the survivor class, indicating greater sensitivity to class overlap.
 
-\begin{table}[htbp]
+This section summarizes baseline predictive performance and examines both error patterns and feature contributions across models.
+
+\begin{table}[H]
 \centering
 \caption{Performance of baseline classification models on the Titanic dataset.}
 \label{tab:baseline_results}
@@ -111,19 +110,33 @@ KNN & 0.8139 & 0.0483 & 0.8027 & 0.1973 \\
 }
 \end{table}
 
+Overall, Linear Discriminant Analysis achieved the strongest test performance, while Logistic Regression performed comparably. K-Nearest Neighbours exhibited lower predictive performance, which is consistent with its sensitivity to class overlap and noise in feature~space.
 
-Feature importance analysis for the linear models revealed consistent patterns. Variables related to passenger title, sex, passenger class, age, and family size contributed most strongly to model decisions. This aligns with that passengers on the Titanic adopted the \textit{`women and children'} first policy which influenced survival. In contrast, KNN relied more heavily on proximity-based features such as family size and ticket group size, reflecting its local decision-making nature.
-\begin{figure}[htbp]
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{figures/cf_matrix_baseline.png}
+    \caption{Confusion matrices for baseline classification models.}
+    \label{fig:cf_baseline}
+\end{figure}
+
+Both LDA and Logistic Regression maintain a balanced trade-off between precision and recall across survival classes. In contrast, KNN shows reduced recall for the survivor class, indicating greater difficulty separating survivors from non-survivors when observations overlap.
+
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{figures/top_baseline_features.png}
-    \caption{Top 10 Features from the Baseline model for LDA, Logistic regression and KNN}
+    \caption{Top 10 features from baseline models for LDA, Logistic Regression, and KNN.}
     \label{fig:baseline_features}
 \end{figure}
 
-\paragraph{Effect of Hyperparameter Tuning}
-After hyperparameter tuning, Logistic Regression exhibited a modest improvement in cross-validation accuracy, increasing from 0.8368 to 0.8408, while maintaining the same test accuracy of 0.8251. This suggests that regularization tuning improved model stability without substantially altering generalization performance. LDA, however, experienced a slight decrease in test accuracy after tuning, from 0.8386 to 0.8117, likely due to shrinkage regularization introducing additional bias in an already well-conditioned covariance structure.
 
-\begin{table}[htbp]
+For the linear models, passenger title, sex, passenger class, and age were consistently identified as influential predictors.  In contrast, KNN relied more heavily on proximity-based features such as family size and ticket group size. These findings align with historical accounts of the Titanic disaster, where it adopted a \textit{``women and children first''} first policy for getting on the lifeboats. 
+
+
+\paragraph{Effect of Hyperparameter Tuning}
+
+The optimal hyperparameter configurations selected via cross-validated grid search differed across models. For Linear Discriminant Analysis, the best-performing configuration used the \texttt{lsqr} solver with a shrinkage parameter of 0.05, indicating mild regularization of the covariance estimate. Logistic Regression achieved its best performance with an $\ell_1$ penalty and regularization strength $C = 1$, encouraging sparse and interpretable coefficient estimates. For K-Nearest Neighbours, the optimal configuration used $k = 5$ nearest neighbours, the $L_1$-norm, and uniform weighting.
+
+\begin{table}[H]
 \centering
 \caption{Performance of tuned classification models on the Titanic dataset.}
 \label{tab:tuned_results}
@@ -140,39 +153,49 @@ KNN & 0.8249 & 0.0479 & 0.7713 & 0.2287 \\
 }
 \end{table}
 
+Hyperparameter tuning produced small improvements in cross-validation accuracy for Logistic Regression, increasing from 0.8368 to 0.8408, while test accuracy remained unchanged at 0.8251. This suggests that tuning improved validation performance without improving generalization to unseen data. In contrast, Linear Discriminant Analysis exhibited a slight increase in cross-validation accuracy but a noticeable decrease in test accuracy, indicating that shrinkage regularization introduced additional bias that did not translate to improved out-of-sample performance. K-Nearest Neighbours experienced the largest decline after tuning, highlighting the sensitivity of distance-based classifiers to hyperparameter choices in datasets with overlapping class distributions.
 
-KNN performance declined following tuning, with test accuracy dropping from 0.8027 to 0.7713. This degradation highlights the sensitivity of KNN to hyperparameter choices and confirms that increasing model flexibility does not necessarily lead to improved generalization, particularly in datasets with moderate sample sizes and overlapping class distributions.
-
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{figures/top_tuned_features.png}
-    \caption{Top 10 Features from the Tuned model for LDA, Logistic regression and KNN}
+    \includegraphics[width=\textwidth]{figures/cf_matrix_tuned.png}
+    \caption{Confusion matrices for tuned classification models.}
+    \label{fig:cf_tuned}
+\end{figure}
+
+Compared to the baseline setting, tuned models generally show a similar error profile, with misclassifications concentrated among passengers whose covariates provide ambiguous survival signals. The tuned KNN model exhibits a larger reduction in recall for the survivor class, consistent with its lower test accuracy and increased susceptibility to overlapping neighborhoods.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/top_tuned_features.png}
+    \caption{Top 10 features from tuned models for LDA, Logistic Regression, and KNN.}
     \label{fig:tuned_features}
 \end{figure}
 
-\subsection*{Discussion}
+The tuned models largely preserved the same dominant predictors identified in the baseline analysis, including passenger title group, sex, passenger class, and age. This consistency indicates that the primary survival signal in the dataset is robust to moderate changes in model configuration, and that tuning primarily affects coefficient regularization rather than altering the overall feature ranking.
+
+\section*{Discussion}
+
+Overall, linear models outperformed the non-parametric KNN approach on the Titanic dataset, suggesting that survival outcomes are primarily governed by global, structured relationships among predictors rather than highly localized decision boundaries. Logistic Regression and LDA benefited from their ability to model global trends and remained robust under both baseline and tuned configurations.
+
+Hyperparameter tuning improved cross-validation performance but did not consistently improve test accuracy. In particular, tuning introduced additional bias for LDA and increased sensitivity for KNN, resulting in reduced generalization performance.
+
+These findings underscore the bias-variance trade-off in supervised classification and demonstrate that increased model flexibility does not guarantee better performance.
 
 
-
-
-\newpage
 \section*{Conclusion}
-
 
 
 
 \begin{thebibliography}{99}
 
-    \bibitem{islp} James, G., Witten, D., Hastie, T., Tibshirani, R., \& Taylor, J. (2023). An introduction to statistical learning: Python edition.
+    \bibitem{islp} James, G., Witten, D., Hastie, T., Tibshirani, R., \& Taylor, J. (2023). \textit{An introduction to statistical learning: Python edition}.
 
-    \bibitem{Hastie} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). The elements of statistical learning.
+    \bibitem{Hastie} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \textit{The elements of statistical learning}.
 
-    \bibitem{Franceschi} Franceschi, L., Donini, M., Perrone, V., Klein, A., Archambeau, C., Seeger, M., ... \& Frasconi, P. (2025). Hyperparameter optimization in machine learning. Foundations and Trends® in Machine Learning, 18(6), 975-1109.
+    \bibitem{Franceschi} Franceschi, L., Donini, M., Perrone, V., Klein, A., Archambeau, C., Seeger, M., ... \& Frasconi, P. (2025).\textit{ Hyperparameter optimization in machine learning. Foundations and Trends® in Machine Learning}, 18(6), 975-1109.
 
-    \bibitem{Kuhn} Kuhn, M., \& Johnson, K. (2013). Applied predictive modeling (Vol. 26, p. 13). New York: Springer.
+    \bibitem{Kuhn} Kuhn, M., \& Johnson, K. (2013). \textit{Applied predictive modelling (Vol. 26, p. 13}). New York: Springer.
 
 \end{thebibliography}
 
 \end{document}
-
-
