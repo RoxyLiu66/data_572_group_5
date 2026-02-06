@@ -1,11 +1,12 @@
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
 
+
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{graphicx}
 \usepackage{setspace}   % might need to run: "tlmgr install setspace" 
                         % in the terminal to download this package if it doesn't work
-
+\usepackage{booktabs}
 \title{Data 572: Project working title}
 
 \author{Avalvir Kaur Sekhon, Zihuan Liu \& Jordan Kaseram}
@@ -78,12 +79,83 @@ For K-Nearest Neighbours, hyperparameters including the number of neighbours, di
 
 \subsection*{Experimental Design}
 
+The experimental design focused on comparing the predictive performance and interpretability of multiple classification models under a controlled and consistent evaluation framework. All models were trained using the same feature set and evaluated using identical performance metrics to isolate the effect of model choice and tuning decisions.
+
+Each classification method was first evaluated in a baseline configuration to establish a reference point for performance. These baseline results were used to assess how well each model captured the underlying structure of the data without additional complexity. The next set of experiments introduced hyperparameter tuning and feature selection to evaluate whether these refinements led to meaningful improvements in generalization performance.
+
+Comparisons were conducted across models using cross-validated accuracy estimates on the training data, followed by final evaluation on a held-out test set. This design enabled direct comparison between linear and non-linear approaches, as well as between parametric and non-parametric models, while controlling for differences in data preprocessing and evaluation procedures.
+
+In addition to predictive performance, model interpretability was examined through feature importance analyses. This allowed assessment of whether performance gains were accompanied by stable and meaningful explanations of survival outcomes.
+
 \subsection*{Results and Analysis}
 
+The performance of the three classification models was first evaluated using baseline configurations and subsequently compared against tuned versions obtained through cross-validated grid search. Model performance was assessed using cross-validation accuracy, test-set accuracy, mean squared error, and class-specific precision.
+
+\paragraph{Baseline Model Performance}
+Among the baseline models, Linear Discriminant Analysis (LDA) achieved the strongest overall performance, with a mean cross-validation accuracy of 0.8249 and a test accuracy of 0.8386. Logistic Regression followed closely with a test accuracy of 0.8251, while K-Nearest Neighbours (KNN) exhibited lower predictive performance, achieving a test accuracy of 0.8027. Confusion matrices reveal that both LDA and Logistic Regression maintained a balanced trade-off between precision and recall across survival classes, whereas KNN showed reduced recall for the survivor class, indicating greater sensitivity to class overlap.
+
+\begin{table}[htbp]
+\centering
+\caption{Performance of baseline classification models on the Titanic dataset.}
+\label{tab:baseline_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Baseline Model & CV Accuracy (Mean) & CV Accuracy (Std) & Test Accuracy & Test MSE \\
+\midrule
+LDA & 0.8249 & 0.0439 & 0.8386 & 0.1614 \\
+Logistic Regression & 0.8368 & 0.0452 & 0.8251 & 0.1749 \\
+KNN & 0.8139 & 0.0483 & 0.8027 & 0.1973 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+
+Feature importance analysis for the linear models revealed consistent patterns. Variables related to passenger title, sex, passenger class, age, and family size contributed most strongly to model decisions. This aligns with that passengers on the Titanic adopted the \textit{`women and children'} first policy which influenced survival. In contrast, KNN relied more heavily on proximity-based features such as family size and ticket group size, reflecting its local decision-making nature.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{figures/top_baseline_features.png}
+    \caption{Top 10 Features from the Baseline model for LDA, Logistic regression and KNN}
+    \label{fig:baseline_features}
+\end{figure}
+
+\paragraph{Effect of Hyperparameter Tuning}
+After hyperparameter tuning, Logistic Regression exhibited a modest improvement in cross-validation accuracy, increasing from 0.8368 to 0.8408, while maintaining the same test accuracy of 0.8251. This suggests that regularization tuning improved model stability without substantially altering generalization performance. LDA, however, experienced a slight decrease in test accuracy after tuning, from 0.8386 to 0.8117, likely due to shrinkage regularization introducing additional bias in an already well-conditioned covariance structure.
+
+\begin{table}[htbp]
+\centering
+\caption{Performance of tuned classification models on the Titanic dataset.}
+\label{tab:tuned_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrr}
+\toprule
+Tuned Model & CV Accuracy (Mean) & CV Accuracy (Std) & Test Accuracy & Test MSE \\
+\midrule
+LDA & 0.8269 & 0.0477 & 0.8117 & 0.1883 \\
+Logistic Regression & 0.8408 & 0.0441 & 0.8251 & 0.1749 \\
+KNN & 0.8249 & 0.0479 & 0.7713 & 0.2287 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+
+KNN performance declined following tuning, with test accuracy dropping from 0.8027 to 0.7713. This degradation highlights the sensitivity of KNN to hyperparameter choices and confirms that increasing model flexibility does not necessarily lead to improved generalization, particularly in datasets with moderate sample sizes and overlapping class distributions.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{figures/top_tuned_features.png}
+    \caption{Top 10 Features from the Tuned model for LDA, Logistic regression and KNN}
+    \label{fig:tuned_features}
+\end{figure}
 
 \subsection*{Discussion}
 
 
+
+
+\newpage
 \section*{Conclusion}
 
 
@@ -94,8 +166,6 @@ For K-Nearest Neighbours, hyperparameters including the number of neighbours, di
     \bibitem{islp} James, G., Witten, D., Hastie, T., Tibshirani, R., \& Taylor, J. (2023). An introduction to statistical learning: Python edition.
 
     \bibitem{Hastie} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). The elements of statistical learning.
-
-    \bibitem{Fisher} Fisher, R. A. (1936). The use of multiple measurements in taxonomic problems. Annals of Eugenics, 7(2), 179-188.
 
     \bibitem{Franceschi} Franceschi, L., Donini, M., Perrone, V., Klein, A., Archambeau, C., Seeger, M., ... \& Frasconi, P. (2025). Hyperparameter optimization in machine learning. Foundations and Trends® in Machine Learning, 18(6), 975-1109.
 
