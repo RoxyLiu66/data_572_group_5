@@ -59,18 +59,19 @@ Final model performance was evaluated on the held-out test set, which remained u
 
 \subsection*{Model Selection}
 
-Classifications were selected to evaluate the predictive performance of the features present in the Titanic data set. These methods include: Logistic Regression, Linear Discriminant Analysis (LDA) and K-Nearest Neighbours (KNN). Logistic Regression and LDA were considered for their interpretability due to linearity \cite{Hastie}. Moreover, the Titanic prediction task is a binary response with a mix of numeric and categorical variables which these models perform well on \cite{islp}.
+Three classification methods were selected to evaluate the predictive performance of the features present in the Titanic data set. These methods include: Logistic Regression, Linear Discriminant Analysis (LDA) and K-Nearest Neighbours (KNN). Logistic Regression and LDA were considered for their interpretability due to linearity \cite{Hastie}. Moreover, the Titanic prediction task is a binary response with a mix of numeric and categorical variables which these models perform well on \cite{islp}.
 
 These parametric tests assume a structured relationship between the predictors and the response, enabling stable parameter estimation and favourable bias-variance trade-offs. In contrast, KNN was included as a non-parametric test to capture potential non-linear patterns without assuming strong distribution assumptions. KNN provides a useful comparison model by classifying passengers based on identifying the observations that are nearest it rather than a global decision boundary \cite{islp}. 
 
 \subsection*{Hyperparameter Tuning Strategy}
 
-Hyperparmeter tuning was conducted using grid search, which is a simple memoryless method that can be used to explore predefined hyperparamer values \cite{Franceschi}. This was combined with stratified cross-validation to identify the optimal model configuration.
+Hyperparameter tuning was conducted using grid search, which is a simple memoryless method that can be used to explore predefined hyperparameter values \cite{Franceschi}. This was combined with stratified cross-validation to identify the optimal model configuration.
 
-For Linear Discriminant Analysis, hyperparameter tuning focused on the choice of solver (\texttt{svd} versus \texttt{lsqr}) and the use of covariance shrinkage, as shrinkage regularization is known to stabilize covariance estimation in the presence of correlated predictors and limited sample sizes \cite{Hastie, Friedman, Franceschi}.  
+For Linear Discriminant Analysis, hyperparameter tuning focused on the choice of solver (\texttt{svd} versus \texttt{lsqr}) and the use of covariance shrinkage, as shrinkage regularization is known to stabilize covariance estimation in the presence of correlated predictors and limited sample sizes \cite{Hastie, Franceschi}.  
 
-For Logistic Regression, tuning was performed over the regularization strength parameter $C$ and the choice of $\ell_1$ and $\ell_2$ penalties, allowing control over model complexity and coefficient sparsity, which directly affects bias–variance trade-offs and interpretability in high-dimensional settings \cite{islp, KuhnJohnson}.  
-For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behavior and to regulate model sensitivity to noise and class overlap \cite{islp, KuhnJohnson}.  
+For Logistic Regression, tuning was performed over the regularization strength parameter $C$ and the choice of $\ell_1$ and $\ell_2$ penalties, allowing control over model complexity and coefficient sparsity, which directly affects bias–variance trade-offs and interpretability in high-dimensional settings \cite{islp, Kuhn}.  
+
+For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behavior and to regulate model sensitivity to noise and class overlap \cite{islp, Kuhn}.  
 
 \newpage
 \section*{Experiment}
@@ -98,7 +99,7 @@ For K-Nearest Neighbours, hyperparameters including the number of neighbours, di
 
     \bibitem{Franceschi} Franceschi, L., Donini, M., Perrone, V., Klein, A., Archambeau, C., Seeger, M., ... \& Frasconi, P. (2025). Hyperparameter optimization in machine learning. Foundations and Trends® in Machine Learning, 18(6), 975-1109.
 
-
+    \bibitem{Kuhn} Kuhn, M., \& Johnson, K. (2013). Applied predictive modeling (Vol. 26, p. 13). New York: Springer.
 
 \end{thebibliography}
 
