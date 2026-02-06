@@ -29,7 +29,7 @@ hello
 
 \section*{Methodology}
 
-\subsection*{Data Preprocessing}
+\subsection*{Data Wrangling}
 The Titantic dataset was preprocessed to enhance its suitability for statistical modeling and to reduce noise and redundancy. Identifer features lacking predictive relevance, such as passenger identifers or ticket numbers, were removed prior to analysis. Missing values in numeric features were imputed using the median, whereas missing categorical variables were imputed using the mode. Categorical features were encoded as dummy variables to use in linear modeling frameworks. 
 
 \noindent To further reduce redundancy and limit multicollinearity, several features were evaluated and pruned. For example, family-related variables were replaced with a single family size variable. This step is necessary since there are many features that are highly correlated and limiting 
