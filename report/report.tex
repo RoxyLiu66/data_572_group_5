@@ -11,7 +11,7 @@
 \usepackage{hyperref}
 \usepackage{url}
 
-\title{Data 572: Project working title}
+\title{Classification of Titanic Survivor Data using Supervised Machine Learning Models}
 
 \author{Avalvir Kaur Sekhon, Zihuan Liu \& Jordan Kaseram}
 
@@ -24,14 +24,14 @@
 
 \begin{abstract}
     \singlespacing
-    single spaced abstract
-
-    cause it looks better
+    This project explores the application of superviesd machine learning techniques to predict passenger survival on the Titanic. Using an augmented Titanic dataset, we implemented and compared several classification models, including Linear Discriminant Analysis (LDA), Logistic Regression and K-Nearest Neighbors (KNN). The data preprocessing phase involved median imputation for missing age values stratified by passenger class, mode imputation for categorical data, and one-hot encoding for feature engineering. Models were evaluated using Repeated Stratified K-Fold cross-validation to ensure robustness against class imbalance. Experimental results demonstrate that feature selection, particularly the inclusion of passenger class and gender, significantly impacts predictive accuracy. The final comparison highlights the trade-offs between model interpretability and predictive performance.
 
 \end{abstract}
 
 \section*{Introduction}
-hello
+Supervised machine learning has become a cornerstone of predictive analytics, offering powerful tools for classification tasks across various domains. In classification, a model learns to map input features to discrete labels based on a labeled training set. This project focuses on the classic Titanic survival prediction task, which serves as a benchmark for evaluating classification algorithms.
+
+The importance of supervised learning in this context lies in its ability to uncover non-linear relationships and interactions between features that may not be apparent through manual analysis. For instance, the "women and children first" protocol suggests a strong interaction between age, sex, and survival. By utilizing models such as Logistic Regression and Random Forests, we can quantify the impact of these socioeconomic and demographic factors. Understanding these models' performance and the validity of our experimental methodology is crucial for ensuring that the predictions are both accurate and generalizable to unseen data.
 
 
 \section*{Methodology}
@@ -56,7 +56,7 @@ The resulting feature set provides a stable and interpretable foundation for tra
 
 \subsection*{Resampling and Validation Strategy}
 
-To ensure reliable model evaluation and reduce over-fitting, the dataset was partitioned into training (75\%) and testing (25\%) sets using a stratified split to preserve the original survival class proportions. Stratification is particularly important for the Titanic dataset due to its class imbalance between survivors and non-survivors.
+To ensure reliable model evaluation and reduce overfitting, the dataset was partitioned into training (75\%) and testing (25\%) sets using a stratified split to preserve the original survival class proportions. Stratification is particularly important for the Titanic dataset due to its class imbalance between survivors and non-survivors.
 
 All model training, hyperparameter tuning, and feature selection were performed exclusively on the training set using stratified $k$-fold cross-validation with $k=5$. This resampling strategy maintains class balance within each fold and provides stable performance estimates while preventing information leakage.
 
@@ -77,18 +77,23 @@ For Linear Discriminant Analysis, hyperparameter tuning focused on the choice of
 
 For Logistic Regression, tuning was performed over the regularization strength parameter $C$ and the choice of $\ell_1$ and $\ell_2$ penalties, allowing control over model complexity and coefficient sparsity, which directly affects bias–variance trade-offs and interpretability in high-dimensional settings \cite{islp, Kuhn}.  
 
-For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behaviour and to regulate model sensitivity to noise and class overlap \cite{islp, Kuhn}.  
+For K-Nearest Neighbours, hyperparameters including the number of neighbours, distance metric, and weighting scheme were tuned to balance local versus global decision behavior and to regulate model sensitivity to noise and class overlap \cite{islp, Kuhn}.  
 
 \section*{Experiment}
 
 \subsection*{Experimental Design}
 
-The experimental design compared the predictive performance and interpretability of multiple classification models under a consistent evaluation framework. All models were trained on the same preprocessed feature set and evaluated using identical performance metrics to isolate the effect of model choice and tuning.
+The experimental design aimed to compare the predictive performance and interpretability of multiple classification models under a consistent evaluation framework. All models were trained using the same preprocessed feature set and assessed with identical performance metrics to isolate the impact of model choice and tuning decisions.
 
-Each method was first evaluated in a baseline configuration to establish a reference level of performance. Hyperparameter tuning was then applied to assess whether controlled increases in model flexibility improved generalization. Performance comparisons were based on cross-validated accuracy on the training data, followed by final evaluation on a held-out test set.\subsection*{Results and Analysis}
+Each method was first evaluated in a baseline configuration to establish a performance reference. Subsequent experiments introduced hyperparameter tuning and feature selection to examine whether these refinements led to improvements in generalization performance.
+
+Model comparisons were based on cross-validated accuracy estimates computed on the training data, followed by final evaluation on a held-out test set. This design enabled fair comparison between linear and non-linear models, as well as between parametric and non-parametric approaches, while controlling for differences in preprocessing and evaluation procedures.
+
+\subsection*{Results and Analysis}
 
 \paragraph{Baseline Model Performance}
-Overall, Linear Discriminant Analysis achieved the strongest test performance, while Logistic Regression performed comparably
+
+This section summarizes baseline predictive performance and examines both error patterns and feature contributions across models.
 
 \begin{table}[H]
 \centering
@@ -107,7 +112,7 @@ KNN & 0.8139 & 0.0483 & 0.8027 & 0.1973 \\
 }
 \end{table}
 
-K-Nearest Neighbours exhibited lower predictive performance, which is consistent with its sensitivity to class overlap and noise in feature~space.
+Overall, Linear Discriminant Analysis achieved the strongest test performance, while Logistic Regression performed comparably. K-Nearest Neighbours exhibited lower predictive performance, which is consistent with its sensitivity to class overlap and noise in feature~space.
 
 \begin{figure}[H]
     \centering
@@ -126,7 +131,7 @@ Both LDA and Logistic Regression maintain a balanced trade-off between precision
 \end{figure}
 
 
-For the linear models, passenger title, sex, passenger class, and age were consistently identified as influential predictors.  In contrast, KNN relied more heavily on proximity-based features such as family size and ticket group size. 
+For the linear models, passenger title, sex, passenger class, and age were consistently identified as influential predictors.  In contrast, KNN relied more heavily on proximity-based features such as family size and ticket group size. These findings align with historical accounts of the Titanic disaster, where it adopted a \textit{``women and children first''} first policy for getting on the lifeboats. 
 
 
 \paragraph{Effect of Hyperparameter Tuning}
@@ -159,7 +164,7 @@ Hyperparameter tuning produced small improvements in cross-validation accuracy f
     \label{fig:cf_tuned}
 \end{figure}
 
-Compared to the baseline setting, tuned models generally show a similar error profile, with misclassification concentrated among passengers whose covariates provide ambiguous survival signals. The tuned KNN model exhibits a larger reduction in recall for the survivor class, consistent with its lower test accuracy and increased susceptibility to overlapping neighbourhoods.
+Compared to the baseline setting, tuned models generally show a similar error profile, with misclassifications concentrated among passengers whose covariates provide ambiguous survival signals. The tuned KNN model exhibits a larger reduction in recall for the survivor class, consistent with its lower test accuracy and increased susceptibility to overlapping neighborhoods.
 
 \begin{figure}[H]
     \centering
@@ -172,21 +177,15 @@ The tuned models largely preserved the same dominant predictors identified in th
 
 \section*{Discussion}
 
-Overall, linear models outperformed the non-parametric KNN approach on the Titanic dataset, suggesting that survival outcomes are primarily governed by global, structured relationships among predictors rather than highly localized decision boundaries. Logistic Regression and LDA benefited from their ability to model these global trends and remained robust under both baseline and tuned configurations.
+Overall, linear models outperformed the non-parametric KNN approach on the Titanic dataset, suggesting that survival outcomes are primarily governed by global, structured relationships among predictors rather than highly localized decision boundaries. Logistic Regression and LDA benefited from their ability to model global trends and remained robust under both baseline and tuned configurations.
 
-Hyperparameter tuning improved cross-validation performance but did not consistently improve test accuracy. In particular, tuning introduced additional bias for LDA and increased sensitivity for KNN, resulting in reduced generalization performance on the test set.
+Hyperparameter tuning improved cross-validation performance but did not consistently improve test accuracy. In particular, tuning introduced additional bias for LDA and increased sensitivity for KNN, resulting in reduced generalization performance.
 
- Feature importance analyses indicate that survival was most strongly associated with passenger sex, title group, passenger class, age, and family size, reflecting the combined influence of demographic and socioeconomic factors on survival outcomes. These findings align with historical accounts of the Titanic disaster, where it adopted a \textit{``women and children first''} policy for getting on the lifeboats.
+These findings underscore the bias-variance trade-off in supervised classification and demonstrate that increased model flexibility does not guarantee better performance.
 
-These findings underscore the bias--variance trade-off in supervised classification and demonstrate that increased model flexibility does not guarantee improved predictive performance, particularly when the underlying signal is driven by low-dimensional, interpretable features.
 
 \section*{Conclusion}
 
-This project applied supervised machine learning methods to the Titanic survival prediction task in order to compare model performance, interpretability, and robustness under a unified evaluation framework. Logistic Regression, LDA, and KNN were assessed using consistent preprocessing, resampling, and validation strategies.
-
-The results indicate that linear classification methods provided strong and stable predictive performance on this dataset. Logistic Regression and Linear Discriminant Analysis effectively captured the primary survival patterns using a small number of interpretable demographic and socioeconomic features. In contrast, the non-parametric K-Nearest Neighbours model exhibited lower and less consistent performance, particularly after tuning, reflecting its sensitivity to overlapping class structures.
-
-Overall, the findings suggest that survival outcomes in the Titanic dataset are largely driven by demographic and socioeconomic factors, with passenger sex, title group, passenger age and family size emerging as the most influential features.
 
 
 \begin{thebibliography}{99}
@@ -194,6 +193,7 @@ Overall, the findings suggest that survival outcomes in the Titanic dataset are 
     \bibitem{islp} James, G., Witten, D., Hastie, T., Tibshirani, R., \& Taylor, J. (2023). \textit{An introduction to statistical learning: Python edition}.
 
     \bibitem{Hastie} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \textit{The elements of statistical learning}.
+
 
     \bibitem{GH_repo} Kaseram, J., Liu, Z., Sekhon, A. (2026). \textit{Titanic survival classification project}.  GitHub repository. Available at: \url{https://github.com/RoxyLiu66/data\_572\_group\_5}
 
